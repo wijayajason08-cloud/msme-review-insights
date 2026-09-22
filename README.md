@@ -2,7 +2,7 @@
 
 > Status: Work in Progress
 
-This project analyzes user reviews of MSME (micro, small, and medium enterprise) financial apps (e.g., BukuWarung, BukuKas) on the Google Play Store using NLP to uncover real, data-backed pain points — then builds a lightweight prototype addressing the top issue.
+This project analyzes user reviews of MSME (micro, small, and medium enterprise) financial apps (e.g., BukuWarung, BukuKas) on the Google Play Store using NLP to uncover real, data-backed pain points, then builds a lightweight prototype addressing the top issue.
 
 ## Background
 
