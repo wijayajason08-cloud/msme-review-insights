@@ -1,4 +1,4 @@
-# MSME-Review-Insights - Uncovering MSME Financial Pain Points via NLP Review Mining
+# MSME Review Insights - Uncovering MSME Financial Pain Points via NLP Review Mining
 
 > Status: Work in Progress
 
