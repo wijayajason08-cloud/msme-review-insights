@@ -6,7 +6,7 @@ This document explains which apps were selected for review scraping and why.
 
 | App Name | Package ID | Installs | Rating | Category |
 |---|---|---|---|---|
-| BukuWarung | `com.bukuwarung` | 5,000,000+ | 3.2★ on Play Store | Bookkeeping / Digital Payments |
+| BukuWarung | `com.bukuwarung` | 5,000,000+ on Play Store | 3.2★ on Play Store | Bookkeeping / Digital Payments |
 | Kasir Pintar | `org.owline.kasirpintar` | 1,000,000+ on Play Store | 4.8★ on Play Store | POS / Cashier |
 
 ## Selection Criteria
