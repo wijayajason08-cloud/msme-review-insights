@@ -14,7 +14,7 @@ This document explains which apps were selected for review scraping and why.
 - **High install count / review volume** — all two apps have large user bases, ensuring enough data for reliable NLP analysis
 - **Represents the target user segment** — all apps target MSME/UMKM owners in Indonesia
 - **Mix of app types** — BukuWarung is bookkeeping-focused (good for direct comparison of pain points within the same category), while Kasir Pintar is POS/cashier-focused (captures a different set of complaints, e.g. inventory or transaction-processing issues, broadening the scope of findings)
-- **Actively maintained** — all three are actively developed with regular updates and ongoing user reviews
+- **Actively maintained** — all two are actively developed with regular updates and ongoing user reviews
 
 ## How Package IDs Were Found
 
