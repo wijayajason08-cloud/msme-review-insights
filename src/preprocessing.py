@@ -1,14 +1,17 @@
 import re
+
 import pandas as pd
-from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
+from id_stopwords import STOPWORDS
+
+STOPWORD_SET = set(STOPWORDS)
 
 SLANG_DICT = {
-    "gk": "tidak", "ga": "tidak", "gak": "tidak", "nggak": "tidak", "ngga": "tidak",
+    "gk": "tidak", "ga": "tidak", "gak": "tidak", "nggak": "tidak", "ngga": "tidak", "tdk": "tidak",
     "bgt": "banget", "yg": "yang", "udh": "sudah", "udah": "sudah",
     "tp": "tapi", "sy": "saya", "aq": "aku", "gw": "saya", "gua": "saya",
     "dr": "dari", "krn": "karena", "karna": "karena", "jd": "jadi",
     "utk": "untuk", "dgn": "dengan", "bs": "bisa", "trs": "terus",
-    "sm": "sama", "gmn": "bagaimana", "knp": "kenapa", "dr": "dari",
+    "sm": "sama", "gmn": "bagaimana", "knp": "kenapa",
     "aja": "saja", "emg": "memang", "emang": "memang",
 }
 
@@ -19,12 +22,17 @@ def normalize_slang(text: str) -> str:
     return " ".join(normalized)
 
 
+def remove_stopwords(text: str) -> str:
+    return " ".join(w for w in text.split() if w not in STOPWORD_SET)
+
+
 def clean_text(text: str) -> str:
-    text = str(text).lower()                       # case folding
-    text = re.sub(r"http\S+", "", text)             # hapus URL
-    text = re.sub(r"[^a-z\s]", " ", text)           # hapus angka, tanda baca, emoji
-    text = re.sub(r"\s+", " ", text).strip()        # hapus spasi berlebih
+    text = str(text).lower()
+    text = re.sub(r"http\S+", "", text)
+    text = re.sub(r"[^a-z\s]", " ", text)
+    text = re.sub(r"\s+", " ", text).strip()
     text = normalize_slang(text)
+    text = remove_stopwords(text)
     return text
 
 
@@ -33,23 +41,17 @@ def main():
     df = pd.read_csv("data/raw/reviews_raw.csv")
     print(f"  -> {len(df)} baris data dimuat")
 
-    # 1. Hapus duplikat
     before = len(df)
     df = df.drop_duplicates(subset="content")
     print(f"Menghapus duplikat: {before - len(df)} baris dihapus")
 
-    # 2. Hapus review kosong/NaN
     before = len(df)
     df = df.dropna(subset=["content"])
     df = df[df["content"].astype(str).str.strip() != ""]
     print(f"Menghapus review kosong: {before - len(df)} baris dihapus")
 
-    print("Membersihkan teks...")
+    print("Membersihkan teks (case folding, hapus tanda baca, normalisasi slang, stopword)...")
     df["content_clean"] = df["content"].apply(clean_text)
-
-    print("Menghapus stopword Bahasa Indonesia...")
-    stopword_remover = StopWordRemoverFactory().create_stop_word_remover()
-    df["content_clean"] = df["content_clean"].apply(lambda x: stopword_remover.remove(x))
 
     before = len(df)
     df = df[df["content_clean"].str.strip() != ""]
