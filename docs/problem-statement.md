@@ -1,82 +1,74 @@
-# Problem Statement
+# Problem Statement: BukuWarung User Pain Points
 
 ## Scope
 
-This problem statement describes pain points found in negative (1-2 star) user reviews of **BukuWarung** on the Google Play Store. Findings should **not** be generalized to KasirPintar or to MSME apps in general. BukuWarung accounts for ~91% of all negative reviews in the combined dataset, and KasirPintar has only 177 negative reviews — too few to support its own reliable findings. See `data-limitations.md` (Section 7) for details.
+This problem statement is based on 1,767 negative (1-2 star) reviews of **BukuWarung** on the Google Play Store. Findings describe BukuWarung specifically and should **not** be generalized to KasirPintar or to MSME financial apps broadly. 91% of negative reviews in the combined dataset come from BukuWarung; KasirPintar's negative sample (177 reviews) is too small for reliable standalone analysis. See `data-limitations.md` for the full discussion.
 
 ## Methodology
 
-1. Scraped ~4,000 reviews each from BukuWarung and KasirPintar on the Play Store
-2. Cleaned and preprocessed text (Indonesian stopword removal that explicitly preserves negation words; slang normalization)
-3. Scored distinctive negative-review language using proportion-based comparison against positive reviews (unigrams, and clause-aware bigrams that don't cross comma/period boundaries)
-4. Trained a sentiment classifier (TF-IDF + Logistic Regression), validated both within BukuWarung and cross-app (BukuWarung → KasirPintar)
-5. Ran topic modeling (LDA) on BukuWarung negative reviews; cross-validated the resulting topics against the bigram findings from step 3 (see `topic-modeling-results.md`)
-6. Quantified each resulting pain point's prevalence across all 1,767 negative BukuWarung reviews via keyword/phrase matching, with real review quotes pulled as evidence (`src/problem_statement_helper.py`)
+Pain points were identified through two independent methods, cross-validated against each other:
 
-**Note on the numbers below:** percentages do not sum to 100%, since a single review can touch on more than one pain point. Only 40.1% of negative reviews matched at least one of the five categories below — the rest are typically brief, non-specific complaints ("jelek", "buruk", single-word ratings) or issues too rare/varied to form a distinct, evidenced category.
+1. **Bigram distinctiveness analysis** (`keyword_analysis.py`) — phrases disproportionately common in negative vs. positive reviews, with clause-boundary-aware bigram extraction to avoid false phrase pairings.
+2. **Topic modeling via LDA** (`topic_modeling.py`) — thematic clustering of negative reviews.
 
-## Pain Points (ranked by prevalence)
+Both methods converged on the same five themes (see `topic-modeling-results.md`). Prevalence for each theme was then measured directly by keyword/phrase matching against all 1,767 negative reviews (`problem_statement_helper.py`). Keyword choices for each theme were checked against sampled example quotes and revised twice after manual review surfaced false matches (see Section 8 of `data-limitations.md` for the sentiment-model debugging process, and the commit history of `problem_statement_helper.py` for this document's own keyword corrections).
 
-### 1. Saldo, QRIS, and account verification problems — 17.3% (305 of 1,767 reviews)
+A review can touch more than one theme, so the percentages below do not sum to 100%.
 
-Users report payments or top-ups not reflecting in their balance, slow or unresolved support responses for these payment issues, and friction in the QRIS registration process (requiring an in-person sales agent visit to register).
+## Ranked Pain Points
 
-> "3x transaksi yg gak masuk ke rekening saya sejak tanggal 5 des kemarin... pelanggan membayar tertera berhasil dan langsung kepotong saldonya, kenapa dananya gak masuk di rekening saya?" — rating 1
-> *("3 transactions haven't reached my account since Dec 5... the customer paid, it shows as successful, and the balance was deducted immediately — why hasn't the money reached my account?")*
+### 1. Saldo / QRIS / verification issues — 305 reviews (17.3%)
 
-> "Top up saldo bisa sekali mau transaksi tidak bisa... cepat balikan saldo saya" — rating 1
-> *("I could top up once, but the transaction won't go through... refund my balance quickly")*
+Users report payments not reflecting in their balance, failed top-ups, and friction registering for QRIS (requiring an in-person sales visit to get a registration code).
 
-This is the single most common pain point, and the highest-stakes one — it involves the user's actual money, not just app inconvenience.
+> "3x transaksi yg gak masuk ke rekening saya sejak tanggal 5 des kemarin... pelanggan membayar tertera berhasil dan langsung kepotong saldonya. kenapa dananya gak masuk di rekening saya?" — rating 1
 
-### 2. Slow or unhelpful customer service — 10.9% (193 of 1,767 reviews)
+> "kita daftar qris.. harus ada sales yg datang dan ngasih kode sales.. mana mungkin di cc" — rating 1
 
-Users report long response times, bot-like or unhelpful replies in chat support, and issues left unresolved after contacting CS.
+### 2. Slow customer service response — 193 reviews (10.9%)
+
+Users describe CS as unresponsive, bot-like, or slow to resolve issues — often raised while trying to report one of the other problems in this list.
+
+> "chat cs sumpah gak ada nyambung nya selalu bales bot" — rating 1
 
 > "Respon CS tlong agak cepat dong Lelet banget, Bkn ny slesai malah ngulang lg laporan ny" — rating 2
-> *("Please make CS response faster, it's very slow — instead of resolving it, I had to repeat my report")*
 
-This overlaps with Pain Point #1: several saldo/QRIS complaints also mention frustration with CS response time while trying to resolve the payment issue. The two problems likely compound each other rather than being fully independent.
+### 3. UI/navigation: the "0" button is unreachable — 149 reviews (8.4%)
 
-### 3. UI/navigation: input button blocked by navigation bar — 8.4% (149 of 1,767 reviews)
-
-A specific, reproducible UI bug: the on-screen "0" digit button (used to enter transaction amounts) is partially or fully covered by the phone's navigation bar, making it difficult or impossible to tap. Reported across multiple phone brands (Redmi, Xiaomi named explicitly by users).
-
-> "Ini kok jadi tombol nol nya jadi ketutupan tombol navigasi.. kalau kelamaan gini auto pindah aplikasi lain." — rating 1
-> *("The 0 button is now covered by the navigation button... if this takes too long it auto-switches to another app")*
+A specific, reproducible bug: the bottom navigation bar overlaps the "0" digit button on the numeric keypad, making certain amounts impossible to enter. Of the five pain points, this is the one with the **single clearest, most isolated root cause** — a layout regression, not a diffuse or backend-dependent issue.
 
 > "gak bisa pencet tombol 0" — rating 1
-> *("can't tap the 0 button")*
 
-Unlike the other pain points, this is a narrow, well-defined UI layout bug rather than a backend/infrastructure issue — a plausible candidate for a quick, visible fix.
+> "tombol nol nya jadi ketutupan tombol navigasi.. kalau kelamaan gini auto pindah aplikasi lain" — rating 1
 
-### 4. App crashes or logs out unexpectedly — 5.1% (90 of 1,767 reviews)
+### 4. App crashes / force-closes — 90 reviews (5.1%)
 
-Users report the app force-closing or logging them out mid-use, sometimes during a transaction.
+> "habis update malah keluar2 terus bagaimana solusinya payah banget" — rating 2
 
-> "gimana ini ko aplikasi nya keluar terus data yg punya utang disana semua" — rating 1
-> *("why does the app keep closing, all the debt records are in there")*
+> "Tolong diperbaiki bug force close apabila kita update data yang di cadangkan" — rating 1
 
-This may be a contributing cause of Pain Point #5 below — see note there.
+### 5. Data/records lost — 89 reviews (5.0%)
 
-### 5. Data/records lost — 5.0% (89 of 1,767 reviews)
+> "Bertahun tahun pakai ni aplikasi sudah baru kali ini aplikasi erornya laaammaa, data2 pelanggan hilang semua, saldo dalam aplikasi kemanaa" — rating 2
 
-Users report customer records, transaction history, or balance data disappearing — in several cases immediately after being signed out unexpectedly.
+> "Akun tiba2 sign out.. mau sign in ga bisa padahal otp dah bener.. data2 penting hilang semua.. jd harus input ulang" — rating 1
 
-> "Akun tiba2 sign out.. mau sign in ga bisa padahal otp dah bener.. data2 penting hilang semua.. jd harus input ulang.. bikin repot" — rating 1
-> *("Account suddenly signed me out... I can't sign back in even though the OTP was correct... all my important data is gone... I have to re-enter everything, it's a hassle")*
+**Note:** in 2 of the 3 sampled quotes for this theme, data loss is described as following an unexpected crash or forced logout — the same failure mode as Pain Point #4. This suggests the two may share a root cause rather than being fully independent problems; worth investigating together if addressed in a prototype.
 
-**Hypothesis, not confirmed:** 2 of the 3 manually-read examples in this category explicitly connect data loss to an unexpected sign-out. This category may not be fully independent from Pain Point #4 — data loss could be a downstream consequence of the same crash/logout bug, rather than a separate root cause. This is based on a small manually-read sample (n=3), not a statistically verified causal link.
+## Cross-cutting observation: issues cluster around app updates
 
-## Cross-cutting pattern: complaints following app updates — 14.9% (263 of 1,767 reviews)
+263 reviews (14.9%) mention "update" in connection with a negative experience — spanning several different root causes (UI regressions, slower performance, new bugs) rather than one single issue, so it is reported here separately rather than as a sixth pain point.
 
-Reviews mentioning "update" span multiple pain points above rather than forming their own category. Some describe new bugs appearing right after an update. This is plausibly connected to the Jan-Feb 2026 complaint spike independently documented in `data_diagnostics.py` (BukuWarung's negative review share rose to 63-77% in that window, against a baseline closer to 53%). This suggests update releases are a recurring source of regressions, though which specific app version(s) were responsible was not identified from this data.
+> "sering banget setelah update malah lebih lelet" — rating 1
 
-## What this analysis does NOT establish
+> "Kenapa setelah di update mkn ribet n susah" — rating 1
 
-- **Causation.** This identifies correlated complaint patterns in review text, not confirmed root causes in the app's code.
-- **Generalization beyond BukuWarung.** See `data-limitations.md`, Section 7.
-- **Which exact app update(s) caused which bug.** The "update" pattern is suggestive, not confirmed.
-- **The Pain Point #4 → #5 causal link.** Plausible from a small reading sample, not independently verified at scale.
+This lines up with a temporal pattern found during exploratory analysis (`data_diagnostics.py`): BukuWarung's monthly negative-review share jumped from 8.8% (Nov 2025) to 63-89% (Jan-Mar 2026). The specific app version responsible was not identified — this is a plausible explanation for the spike, not a verified one.
 
-See `docs/data-limitations.md` for the full list of data limitations and methodology caveats (including bugs found and fixed during this analysis), and `docs/topic-modeling-results.md` for the topic modeling results this builds on.
+## Coverage
+
+708 of 1,767 negative reviews (40.1%) matched at least one of the five pain points above. The remaining ~60% are complaints outside these categories — reviews too vague to categorize ("jelek", "aplikasi sampah"), or feedback about pricing/business model/feature requests rather than bugs.
+
+## Implications for MVP scope (Step 7)
+
+Saldo/QRIS/verification issues are the most frequent and touch the core trust proposition of a financial app, but very likely involve backend or third-party payment infrastructure outside the reach of a lightweight student prototype. The UI/navigation bug (#3) is the most tractable to demonstrate: it has a single, well-defined, reproducible cause, requires no backend, and directly illustrates the project's research-to-prototype pipeline. Candidate framing for Step 7: a corrected numeric-entry UI component, positioned as a fix for the specific, evidenced bug described above.
