@@ -71,4 +71,4 @@ This lines up with a temporal pattern found during exploratory analysis (`data_d
 
 ## Implications for MVP scope (Step 7)
 
-Saldo/QRIS/verification issues are the most frequent and touch the core trust proposition of a financial app, but very likely involve backend or third-party payment infrastructure outside the reach of a lightweight student prototype. The UI/navigation bug (#3) is the most tractable to demonstrate: it has a single, well-defined, reproducible cause, requires no backend, and directly illustrates the project's research-to-prototype pipeline. Candidate framing for Step 7: a corrected numeric-entry UI component, positioned as a fix for the specific, evidenced bug described above.
+*Revision note: an earlier draft of this section recommended fixing the UI/navigation bug (Pain Point #3) as the MVP, based purely on technical feasibility. That recommendation was reconsidered — it would leave the sentiment analysis and topic modeling work from Steps 5-6 completely unused in the final prototype. The final MVP decision and rationale are documented in `mvp-scope.md`.*
