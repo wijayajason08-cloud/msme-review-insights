@@ -1,26 +1,6 @@
 import pandas as pd
+from pain_point_categories import PAIN_POINTS
 
-PAIN_POINTS = {
-    "CS respons lambat": ["cs", "respon", "chat"],
-    "Saldo/QRIS/verifikasi bermasalah": ["saldo", "qris", "verifikasi", "rekening"],
-    # "hilang" saja ambigu: bisa berarti data hilang (yang kita maksud), fitur
-    # sengaja dihapus ("dihilangin"), atau elemen UI yang tidak mau hilang
-    # ("logo tidak bisa hilang"). Dipersempit ke frasa yang sudah tervalidasi
-    # lewat bigram di Step 4-5, supaya maknanya pasti soal kehilangan data.
-    "Data/catatan hilang": [
-        "data hilang", "hilang data", "catatan hilang", "hilang catatan",
-        "pembukuan hilang", "hilang pembukuan", "hilang semua", "semua hilang",
-        "saldo hilang", "hilang saldo",
-    ],
-    "Aplikasi keluar sendiri / crash": ["keluar", "force close", "crash"],
-    "UI/navigasi: tombol & angka 0 tidak bisa diketik": [
-        "tombol", "navigasi", "layar", "angka 0", "angka nol", "pencet nol", "ketik nol",
-    ],
-}
-
-# Diukur terpisah, bukan kategori pain point -- "update" bisa merujuk ke bug
-# yang berbeda-beda (data hilang, UI rusak, crash), jadi dilaporkan sebagai
-# pola lintas-kategori saja.
 CROSS_CUTTING = {"Menyebut kata 'update' (lintas kategori, sebab beragam)": ["update"]}
 
 
