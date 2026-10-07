@@ -1,0 +1,8 @@
+pandas
+matplotlib
+wordcloud
+scikit-learn
+joblib
+streamlit
+google-play-scraper
+pytest
