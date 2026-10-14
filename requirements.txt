@@ -1,8 +1,6 @@
-pandas
-matplotlib
-wordcloud
-scikit-learn
-joblib
-streamlit
-google-play-scraper
-pytest
+streamlit==1.65.0
+pandas==3.0.6
+numpy==2.5.2
+scipy==1.18.1
+scikit-learn==1.9.1
+joblib==1.6.0

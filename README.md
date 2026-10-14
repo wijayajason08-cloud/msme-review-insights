@@ -43,10 +43,15 @@ Full MVP scope and rationale: [`docs/mvp-scope.md`](docs/mvp-scope.md).
 
 ## Demo
 
-<!-- TODO: add screenshot/GIF -->
-
 - **Live app:** _(link added after deployment)_
-- **Video walkthrough:** _(link added after recording)_
+
+A negative review is classified with a confidence score and matched to a pain-point category:
+
+![Negative feedback example](docs/images/demo_negative.png)
+
+Each analysis is appended to a session history table:
+
+![Session history](docs/images/demo_history.png)
 
 ## Tech Stack
 
@@ -60,24 +65,36 @@ Full MVP scope and rationale: [`docs/mvp-scope.md`](docs/mvp-scope.md).
 
 ## Getting Started
 
+Run the app (minimal dependencies):
+
 ```bash
-# Clone the repo
-git clone https://github.com/wijayajason08-cloud/umkm-review-insights.git
-cd umkm-review-insights
+git clone https://github.com/wijayajason08-cloud/msme-review-insights.git
+cd msme-review-insights
 
-# Install dependencies
 pip install -r requirements.txt
-
-# Run the app
 streamlit run src/app.py
 # On Windows, if the `streamlit` command isn't recognized:
 # python -m streamlit run src/app.py
 ```
 
+Reproduce the full analysis pipeline (scraping, EDA, modeling, tests):
+
+```bash
+pip install -r requirements-analysis.txt
+
+python src/scraper.py          # note: re-scraping fetches the newest reviews, so numbers may differ
+python src/preprocessing.py
+python src/eda.py
+python src/keyword_analysis.py
+python src/sentiment_model.py
+python src/topic_modeling.py
+python -m pytest tests/ -v
+```
+
 ## Project Structure
 
 ```
-umkm-review-insights/
+msme-review-insights/
 ├── data/
 │   ├── raw/                     # scraped review data
 │   └── processed/               # cleaned data
@@ -99,7 +116,7 @@ umkm-review-insights/
 │   └── app.py                   # Step 9: Streamlit UI
 ├── models/                      # trained sentiment model + vectorizer
 ├── docs/
-│   ├── images/                  # charts and wordclouds
+│   ├── images/                  # charts, wordclouds, app screenshots
 │   ├── data-sources.md          # target app selection rationale
 │   ├── data-limitations.md      # known limitations + debugging log
 │   ├── topic-modeling-results.md
@@ -107,7 +124,8 @@ umkm-review-insights/
 │   └── mvp-scope.md             # MVP feature scope and rationale
 ├── tests/
 │   └── test_classifier.py
-├── requirements.txt
+├── requirements.txt             # minimal, pinned: what the app needs to run
+├── requirements-analysis.txt    # full pipeline dependencies
 └── README.md
 ```
 
@@ -127,7 +145,6 @@ See [`docs/data-limitations.md`](docs/data-limitations.md) for the full discussi
 
 ## Roadmap
 
-<!-- TODO: fill in future development ideas -->
 - Expand analysis to more MSME finance apps once a larger, comparably sized negative sample is available
 - Replace keyword-based category detection with a trained multi-label classifier
 
