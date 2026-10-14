@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # BukuWarung Feedback Insights — NLP-Driven Pain Point Analysis & Classifier
+=======
+# MSME Review Insights — Uncovering MSME Financial Pain Points via NLP Review Mining
+>>>>>>> origin/main
 
 > Status: MVP complete
 
