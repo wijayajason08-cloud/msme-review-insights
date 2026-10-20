@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 # BukuWarung Feedback Insights — NLP-Driven Pain Point Analysis & Classifier
-=======
-# MSME Review Insights — Uncovering MSME Financial Pain Points via NLP Review Mining
->>>>>>> origin/main
 
 > Status: MVP complete
 
@@ -47,7 +43,7 @@ Full MVP scope and rationale: [`docs/mvp-scope.md`](docs/mvp-scope.md).
 
 ## Demo
 
-- **Live app:** _(link added after deployment)_
+The app runs locally — see [Getting Started](#getting-started) to try it yourself.
 
 A negative review is classified with a confidence score and matched to a pain-point category:
 
@@ -69,7 +65,7 @@ Each analysis is appended to a session history table:
 
 ## Getting Started
 
-Run the app (minimal dependencies):
+Run the app (minimal dependencies). `requirements.txt` pins the exact versions the model was trained and tested with (Python 3.14); matching the scikit-learn version matters, since a saved model may not load correctly under a different one:
 
 ```bash
 git clone https://github.com/wijayajason08-cloud/msme-review-insights.git
